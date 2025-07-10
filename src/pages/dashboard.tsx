@@ -11,7 +11,7 @@ import {
   Users,
   DollarSign
 } from 'lucide-react';
-import { Listing, AuditLog } from '../types';
+import { Listing, AuditLog } from '../../types';
 
 interface DashboardProps {
   stats: {
