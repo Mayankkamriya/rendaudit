@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const listingsResponse = listings.map(listing => ({
       ...listing,
       _id: listing._id.toString(),
-    }));
+    })) as Listing[];
 
     const totalPages = Math.ceil(total / limit);
 

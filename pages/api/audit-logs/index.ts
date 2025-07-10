@@ -60,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const auditLogsResponse = auditLogs.map(log => ({
       ...log,
       _id: log._id.toString(),
-    }));
+    })) as AuditLog[];
 
     const totalPages = Math.ceil(total / limit);
 
