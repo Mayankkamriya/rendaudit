@@ -9,6 +9,7 @@
   "env": {
     "MONGODB_URI": "mongodb+srv://mayank:your-password@yardstick.9279w.mongodb.net/RentAudit",
     "JWT_SECRET": "rentaudit-super-secret-jwt-key-20287624",
-    "NEXTAUTH_SECRET": "rentaudit-super-secret-nextauth-key-20287624"
+    "NEXTAUTH_SECRET": "rentaudit-super-secret-nextauth-key-20287624",
+    "NEXTAUTH_URL": "http://localhost:3000"
   }
 } 
