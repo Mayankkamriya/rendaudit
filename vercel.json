@@ -7,7 +7,7 @@
     }
   ],
   "env": {
-    "MONGODB_URI": "@MONGODB_URI",
+    "MONGODB_URI": "mongodb+srv://mayank:your-password@yardstick.9279w.mongodb.net/RentAudit",
     "JWT_SECRET": "@jwt_secret",
     "NEXTAUTH_SECRET": "@nextauth_secret"
   }
