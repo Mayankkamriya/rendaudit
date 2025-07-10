@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../../lib/mongodb';
-import { comparePassword, generateToken } from '../../../lib/auth';
-import { Admin } from '../../../types';
+import clientPromise from '../../../../lib/mongodb';
+import { comparePassword, generateToken } from '../../../../lib/auth';
+import { Admin } from '../../../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
-import clientPromise from '../../../lib/mongodb';
-import { verifyToken } from '../../../lib/auth';
-import { Listing, AuditLog } from '../../../types';
+import clientPromise from '../../../../lib/mongodb';
+import { verifyToken } from '../../../../lib/auth';
+import { Listing, AuditLog } from '../../../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
