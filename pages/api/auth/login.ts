@@ -1,7 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { ObjectId } from 'mongodb';
 import clientPromise from '../../../lib/mongodb';
 import { comparePassword, generateToken } from '../../../lib/auth';
 import { Admin } from '../../../types';
+
+interface AdminDocument extends Omit<Admin, '_id'> {
+  _id: ObjectId;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -17,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const client = await clientPromise;
     const db = client.db();
-    const admin = await db.collection<Admin>('admins').findOne({ email });
+    const admin = await db.collection<AdminDocument>('admins').findOne({ email });
 
     if (!admin) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });

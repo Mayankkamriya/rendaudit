@@ -1,7 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { ObjectId } from 'mongodb';
 import clientPromise from '../../../lib/mongodb';
 import { verifyToken } from '../../../lib/auth';
 import { AuditLog, PaginatedResponse } from '../../../types';
+
+interface AuditLogDocument extends Omit<AuditLog, '_id'> {
+  _id: ObjectId;
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -39,22 +44,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Get total count
-    const total = await db.collection<AuditLog>('auditLogs').countDocuments(filter);
+    const total = await db.collection<AuditLogDocument>('auditLogs').countDocuments(filter);
 
     // Get paginated data
     const skip = (page - 1) * limit;
     const auditLogs = await db
-      .collection<AuditLog>('auditLogs')
+      .collection<AuditLogDocument>('auditLogs')
       .find(filter)
       .sort({ timestamp: -1 })
       .skip(skip)
       .limit(limit)
       .toArray();
 
+    // Convert ObjectIds to strings for response
+    const auditLogsResponse = auditLogs.map(log => ({
+      ...log,
+      _id: log._id.toString(),
+    }));
+
     const totalPages = Math.ceil(total / limit);
 
     const response: PaginatedResponse<AuditLog> = {
-      data: auditLogs,
+      data: auditLogsResponse,
       total,
       page,
       limit,

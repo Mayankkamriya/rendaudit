@@ -4,6 +4,10 @@ import clientPromise from '../../../lib/mongodb';
 import { verifyToken } from '../../../lib/auth';
 import { Listing, AuditLog } from '../../../types';
 
+interface ListingDocument extends Omit<Listing, '_id'> {
+  _id: ObjectId;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
@@ -22,30 +26,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ success: false, error: 'Invalid token' });
   }
 
-  const client = await clientPromise;
-  const db = client.db();
+      const client = await clientPromise;
+    const db = client.db();
 
-  try {
-    switch (req.method) {
-      case 'GET':
-        const listing = await db.collection<Listing>('listings').findOne({ _id: new ObjectId(id) });
-        
-        if (!listing) {
-          return res.status(404).json({ success: false, error: 'Listing not found' });
-        }
+    try {
+      switch (req.method) {
+        case 'GET':
+          const listing = await db.collection<ListingDocument>('listings').findOne({ _id: new ObjectId(id) });
+          
+          if (!listing) {
+            return res.status(404).json({ success: false, error: 'Listing not found' });
+          }
 
-        res.status(200).json({
-          success: true,
-          data: listing,
-        });
-        break;
+          // Convert ObjectId to string for response
+          const listingResponse = {
+            ...listing,
+            _id: listing._id.toString(),
+          };
+
+          res.status(200).json({
+            success: true,
+            data: listingResponse,
+          });
+          break;
 
       case 'PUT':
         const { action, ...updateData } = req.body;
 
         if (action === 'approve' || action === 'reject') {
           // Status change
-          const listing = await db.collection<Listing>('listings').findOne({ _id: new ObjectId(id) });
+          const listing = await db.collection<ListingDocument>('listings').findOne({ _id: new ObjectId(id) });
           
           if (!listing) {
             return res.status(404).json({ success: false, error: 'Listing not found' });
@@ -53,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           const newStatus = action === 'approve' ? 'approved' : 'rejected';
           
-          await db.collection<Listing>('listings').updateOne(
+          await db.collection<ListingDocument>('listings').updateOne(
             { _id: new ObjectId(id) },
             { 
               $set: { 
@@ -64,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           );
 
           // Create audit log
-          const auditLog: Omit<AuditLog, '_id'> = {
+          const auditLog = {
             action,
             listingId: id,
             listingTitle: listing.title,
@@ -76,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             timestamp: new Date(),
           };
 
-          await db.collection<AuditLog>('auditLogs').insertOne(auditLog);
+          await db.collection('auditLogs').insertOne(auditLog);
 
           res.status(200).json({
             success: true,
@@ -84,7 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         } else {
           // Update listing data
-          const listing = await db.collection<Listing>('listings').findOne({ _id: new ObjectId(id) });
+          const listing = await db.collection<ListingDocument>('listings').findOne({ _id: new ObjectId(id) });
           
           if (!listing) {
             return res.status(404).json({ success: false, error: 'Listing not found' });
@@ -92,15 +102,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           const changes: Record<string, any> = {};
           Object.keys(updateData).forEach(key => {
-            if (listing[key as keyof Listing] !== updateData[key]) {
+            if (listing[key as keyof ListingDocument] !== updateData[key]) {
               changes[key] = {
-                from: listing[key as keyof Listing],
+                from: listing[key as keyof ListingDocument],
                 to: updateData[key],
               };
             }
           });
 
-          await db.collection<Listing>('listings').updateOne(
+          await db.collection<ListingDocument>('listings').updateOne(
             { _id: new ObjectId(id) },
             { 
               $set: { 
@@ -112,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           // Create audit log for edit
           if (Object.keys(changes).length > 0) {
-            const auditLog: Omit<AuditLog, '_id'> = {
+            const auditLog = {
               action: 'edit',
               listingId: id,
               listingTitle: listing.title,
@@ -123,7 +133,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               timestamp: new Date(),
             };
 
-            await db.collection<AuditLog>('auditLogs').insertOne(auditLog);
+            await db.collection('auditLogs').insertOne(auditLog);
           }
 
           res.status(200).json({

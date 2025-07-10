@@ -1,12 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ObjectId } from 'mongodb';
 import clientPromise from '../../../lib/mongodb';
-import { verifyToken } from '../../../lib/auth';
 import { Listing, PaginatedResponse } from '../../../types';
-
-interface ListingDocument extends Omit<Listing, '_id'> {
-  _id: ObjectId;
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -14,31 +8,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Verify authentication
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ success: false, error: 'No token provided' });
-    }
-
-    const user = verifyToken(token);
-    if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid token' });
-    }
-
     const client = await clientPromise;
     const db = client.db();
 
     // Get query parameters
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const status = req.query.status as string;
     const search = req.query.search as string;
+    const location = req.query.location as string;
+    const minPrice = req.query.minPrice ? parseInt(req.query.minPrice as string) : undefined;
+    const maxPrice = req.query.maxPrice ? parseInt(req.query.maxPrice as string) : undefined;
+    const fuelType = req.query.fuelType as string;
+    const transmission = req.query.transmission as string;
 
-    // Build filter
-    const filter: any = {};
-    if (status && status !== 'all') {
-      filter.status = status;
-    }
+    // Build filter - only show approved listings
+    const filter: any = { status: 'approved' };
+    
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -48,13 +33,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ];
     }
 
+    if (location) {
+      filter.location = { $regex: location, $options: 'i' };
+    }
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      filter.price = {};
+      if (minPrice !== undefined) filter.price.$gte = minPrice;
+      if (maxPrice !== undefined) filter.price.$lte = maxPrice;
+    }
+
+    if (fuelType) {
+      filter.fuelType = fuelType;
+    }
+
+    if (transmission) {
+      filter.transmission = transmission;
+    }
+
     // Get total count
-    const total = await db.collection<ListingDocument>('listings').countDocuments(filter);
+    const total = await db.collection('listings').countDocuments(filter);
 
     // Get paginated data
     const skip = (page - 1) * limit;
     const listings = await db
-      .collection<ListingDocument>('listings')
+      .collection('listings')
       .find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -82,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: response,
     });
   } catch (error) {
-    console.error('Fetch listings error:', error);
+    console.error('Fetch public listings error:', error);
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 } 
