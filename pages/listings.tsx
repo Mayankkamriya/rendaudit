@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import Layout from '../../components/Layout';
+import { useAuth } from '../contexts/AuthContext';
+import Layout from '../components/Layout';
 import { 
-  Search,  
+  Search, 
   ChevronLeft, 
   ChevronRight,
   CheckCircle,
   XCircle,
   Edit,
-  Eye
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { Listing } from '../../types';
-import EditListingModal from '../../components/EditListingModal';
+import { Listing } from '../types';
+import EditListingModal from '../components/EditListingModal';
 
 export default function Listings() {
   const { user, token } = useAuth();
@@ -51,7 +50,6 @@ export default function Listings() {
         toast.error('Failed to fetch listings');
       }
     } catch (error) {
-      console.error('Error fetching listings:', error);
       toast.error('Error fetching listings');
     } finally {
       setLoading(false);
@@ -82,7 +80,6 @@ export default function Listings() {
         toast.error(`Failed to ${action} listing`);
       }
     } catch (error) {
-      console.error(`Error ${action}ing listing:`, error);
       toast.error(`Error ${action}ing listing`);
     }
   };

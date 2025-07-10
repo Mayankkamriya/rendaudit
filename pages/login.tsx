@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import { Eye, EyeOff, Car } from 'lucide-react';
 
@@ -25,7 +25,6 @@ export default function Login() {
         toast.error('Invalid credentials');
       }
     } catch (error) {
-      console.error('Login error:', error);
       toast.error('Login failed. Please try again.');
     } finally {
       setLoading(false);

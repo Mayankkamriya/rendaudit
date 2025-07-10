@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../../../lib/mongodb';
-import { verifyToken } from '../../../../lib/auth';
-import { Listing, PaginatedResponse } from '../../../../types';
+import clientPromise from '../../../lib/mongodb';
+import { verifyToken } from '../../../lib/auth';
+import { AuditLog, PaginatedResponse } from '../../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -25,41 +25,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get query parameters
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const status = req.query.status as string;
-    const search = req.query.search as string;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const action = req.query.action as string;
+    const adminId = req.query.adminId as string;
 
     // Build filter
     const filter: any = {};
-    if (status && status !== 'all') {
-      filter.status = status;
+    if (action && action !== 'all') {
+      filter.action = action;
     }
-    if (search) {
-      filter.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-        { carModel: { $regex: search, $options: 'i' } },
-        { location: { $regex: search, $options: 'i' } },
-      ];
+    if (adminId && adminId !== 'all') {
+      filter.adminId = adminId;
     }
 
     // Get total count
-    const total = await db.collection<Listing>('listings').countDocuments(filter);
+    const total = await db.collection<AuditLog>('auditLogs').countDocuments(filter);
 
     // Get paginated data
     const skip = (page - 1) * limit;
-    const listings = await db
-      .collection<Listing>('listings')
+    const auditLogs = await db
+      .collection<AuditLog>('auditLogs')
       .find(filter)
-      .sort({ createdAt: -1 })
+      .sort({ timestamp: -1 })
       .skip(skip)
       .limit(limit)
       .toArray();
 
     const totalPages = Math.ceil(total / limit);
 
-    const response: PaginatedResponse<Listing> = {
-      data: listings,
+    const response: PaginatedResponse<AuditLog> = {
+      data: auditLogs,
       total,
       page,
       limit,
@@ -71,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: response,
     });
   } catch (error) {
-    console.error('Fetch listings error:', error);
+    console.error('Fetch audit logs error:', error);
     res.status(500).json({ success: false, error: 'Internal server error' });
   }
 } 

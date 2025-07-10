@@ -1,40 +1,180 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# RentAudit Admin Dashboard
 
-## Getting Started
+A comprehensive admin dashboard for managing car rental listings built with Next.js, TypeScript, and MongoDB.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Core Features
+- ✅ **Authentication System** - Secure login with JWT tokens
+- ✅ **Dashboard Overview** - Statistics and recent activity
+- ✅ **Listings Management** - Paginated table with filtering and search
+- ✅ **Approval Workflow** - Approve, reject, or edit listings
+- ✅ **Audit Trail** - Complete logging of all admin actions
+- ✅ **Responsive Design** - Works on desktop and mobile
+
+### Technical Features
+- ✅ **Next.js 14** with App Router
+- ✅ **TypeScript** for type safety
+- ✅ **Tailwind CSS** for styling
+- ✅ **MongoDB** for data persistence
+- ✅ **JWT Authentication** with bcrypt password hashing
+- ✅ **Server-Side Rendering** with getServerSideProps
+- ✅ **Context API** for state management
+- ✅ **React Hook Form** for form handling
+- ✅ **Toast Notifications** for user feedback
+- ✅ **Performance Optimizations** - Efficient re-rendering
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- MongoDB Atlas account
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd rentaudit
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+   ```env
+   MONGODB_URI=your mongo uri
+   JWT_SECRET=jwt secret
+   NEXTAUTH_SECRET=jwt secret
+   NEXTAUTH_URL=http://localhost:3000
+   ```
+
+4. **Set up the database**
+   ```bash
+   npx ts-node scripts/setup-db.ts
+   ```
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Demo Credentials
+- **Email:** admin@rentaudit.com
+- **Password:** admin123
+
+## Project Structure
+
+```
+rentaudit/
+├── components/          # Reusable React components
+│   ├── Layout.tsx      # Main layout with navigation
+│   └── EditListingModal.tsx
+├── contexts/           # React Context providers
+│   └── AuthContext.tsx
+├── lib/               # Utility libraries
+│   ├── mongodb.ts     # MongoDB connection
+│   └── auth.ts        # Authentication utilities
+├── pages/             # Next.js pages
+│   ├── api/           # API routes
+│   │   ├── auth/      # Authentication endpoints
+│   │   ├── listings/  # Listings management
+│   │   └── audit-logs/ # Audit trail
+│   ├── dashboard.tsx  # Main dashboard
+│   ├── listings.tsx   # Listings management
+│   ├── audit-logs.tsx # Audit logs
+│   └── login.tsx      # Login page
+├── scripts/           # Database setup scripts
+├── styles/            # Global styles
+├── types/             # TypeScript type definitions
+└── public/            # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Endpoints
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Authentication
+- `POST /api/auth/login` - Admin login
+- `GET /api/auth/verify` - Verify JWT token
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Listings
+- `GET /api/listings` - Get paginated listings with filters
+- `GET /api/listings/[id]` - Get specific listing
+- `PUT /api/listings/[id]` - Update listing or change status
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Audit Logs
+- `GET /api/audit-logs` - Get paginated audit logs with filters
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Database Collections
 
-## Learn More
+### admins
+- Admin user accounts with hashed passwords
 
-To learn more about Next.js, take a look at the following resources:
+### listings
+- Car rental listings with status tracking
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### auditLogs
+- Complete audit trail of all admin actions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Key Features Explained
 
-## Deploy on Vercel
+### Authentication Flow
+1. Admin enters credentials on login page
+2. Server validates against MongoDB
+3. JWT token generated and stored in localStorage
+4. Token verified on each protected route
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Listing Management
+1. View paginated listings with search and filters
+2. Approve/reject pending listings
+3. Edit listing details with form validation
+4. All actions logged in audit trail
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### Audit Trail
+- Tracks all admin actions (approve, reject, edit)
+- Records who performed what action and when
+- Shows detailed changes for edit operations
+- Filterable by action type and admin
+
+### Performance Optimizations
+- Efficient pagination to handle large datasets
+- Optimistic UI updates for better UX
+- Minimal re-renders with React.memo
+- Server-side rendering for SEO and performance
+
+## Deployment
+
+### Vercel Deployment
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Environment Variables for Production
+```env
+MONGODB_URI=your-production-mongodb-uri
+JWT_SECRET=your-secure-jwt-secret
+NEXTAUTH_SECRET=your-secure-nextauth-secret
+NEXTAUTH_URL=https://your-domain.vercel.app
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Support
+
+For support, email support@rentaudit.com or create an issue in the repository. 

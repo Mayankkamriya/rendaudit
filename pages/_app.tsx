@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app';
-import { AuthProvider } from '../../contexts/AuthContext';
+import { AuthProvider } from '../contexts/AuthContext';
 import { Toaster } from 'react-hot-toast';
 import '../styles/globals.css';
 
