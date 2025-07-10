@@ -7,7 +7,7 @@
     }
   ],
   "env": {
-    "MONGODB_URI": "@mongodb_uri",
+    "MONGODB_URI": "@MONGODB_URI",
     "JWT_SECRET": "@jwt_secret",
     "NEXTAUTH_SECRET": "@nextauth_secret"
   }
