@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useAuth } from '../../contexts/AuthContext';
 import Layout from '../../components/Layout';
@@ -7,9 +6,6 @@ import {
   CheckCircle, 
   XCircle, 
   Clock,
-  TrendingUp,
-  Users,
-  DollarSign
 } from 'lucide-react';
 import { Listing, AuditLog } from '../../types';
 
@@ -72,7 +68,7 @@ export default function Dashboard({ stats, recentListings, recentAuditLogs }: Da
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Welcome back! Here's what's happening with your listings.</p>
+          <p className="text-gray-600">Welcome back! Here&#39;s what&#39;s happening with your listings.</p>
         </div>
 
         {/* Stats Grid */}

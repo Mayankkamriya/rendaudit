@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import Layout from '../../components/Layout';
 import { 
-  Search, 
-  Filter, 
+  Search,  
   ChevronLeft, 
   ChevronRight,
   CheckCircle,
@@ -52,6 +51,7 @@ export default function Listings() {
         toast.error('Failed to fetch listings');
       }
     } catch (error) {
+      console.error('Error fetching listings:', error);
       toast.error('Error fetching listings');
     } finally {
       setLoading(false);
@@ -82,6 +82,7 @@ export default function Listings() {
         toast.error(`Failed to ${action} listing`);
       }
     } catch (error) {
+      console.error(`Error ${action}ing listing:`, error);
       toast.error(`Error ${action}ing listing`);
     }
   };

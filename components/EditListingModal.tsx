@@ -51,6 +51,7 @@ export default function EditListingModal({ listing, onClose, onSave, token }: Ed
         toast.error('Failed to update listing');
       }
     } catch (error) {
+      console.error('Error updating listing:', error);
       toast.error('Error updating listing');
     } finally {
       setLoading(false);
