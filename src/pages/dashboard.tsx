@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useAuth } from '../../contexts/AuthContext';
-
+import Layout from '../../components/Layout';
 import { 
   Car, 
   CheckCircle, 
@@ -11,6 +11,7 @@ import {
   Users,
   DollarSign
 } from 'lucide-react';
+import { Listing, AuditLog } from '../types';
 
 interface DashboardProps {
   stats: {
@@ -19,7 +20,8 @@ interface DashboardProps {
     approvedListings: number;
     rejectedListings: number;
   };
-
+  recentListings: Listing[];
+  recentAuditLogs: AuditLog[];
 }
 
 export default function Dashboard({ stats, recentListings, recentAuditLogs }: DashboardProps) {

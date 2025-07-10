@@ -1,5 +1,7 @@
 import { useState } from 'react';
-
+import { useRouter } from 'next/router';
+import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-hot-toast';
 import { Eye, EyeOff, Car } from 'lucide-react';
 
 export default function Login() {
@@ -7,9 +9,27 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const router = useRouter();
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
- 
+    try {
+      const success = await login(email, password);
+      if (success) {
+        toast.success('Login successful!');
+        router.push('/dashboard');
+      } else {
+        toast.error('Invalid credentials');
+      }
+    } catch (error) {
+      toast.error('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center px-4">
@@ -25,7 +45,7 @@ export default function Login() {
             <p className="text-gray-600">Admin Dashboard</p>
           </div>
 
-          <form  className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
