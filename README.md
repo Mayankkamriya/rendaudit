@@ -35,7 +35,7 @@ A comprehensive admin dashboard for managing car rental listings built with Next
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Mayankkamriya/rentaudit.git
    cd rentaudit
    ```
 
@@ -45,7 +45,7 @@ A comprehensive admin dashboard for managing car rental listings built with Next
    ```
 
 3. **Set up environment variables**
-   Create a `.env.local` file in the root directory:
+   Create a `.env` file in the root directory:
    ```env
    MONGODB_URI=your mongo uri
    JWT_SECRET=jwt secret
@@ -53,9 +53,9 @@ A comprehensive admin dashboard for managing car rental listings built with Next
    NEXTAUTH_URL=http://localhost:3000
    ```
 
-4. **Set up the database**
+4. **Seed with real data**
    ```bash
-   npx ts-node scripts/setup-db.ts
+   npm run seed
    ```
 
 5. **Run the development server**
@@ -103,13 +103,20 @@ rentaudit/
 - `POST /api/auth/login` - Admin login
 - `GET /api/auth/verify` - Verify JWT token
 
-### Listings
+### Admin Listings Management
 - `GET /api/listings` - Get paginated listings with filters
 - `GET /api/listings/[id]` - Get specific listing
 - `PUT /api/listings/[id]` - Update listing or change status
 
+### Public APIs
+- `GET /api/public/listings` - Get approved listings (no auth required)
+- `POST /api/listings/submit` - Submit new listing for approval
+
 ### Audit Logs
 - `GET /api/audit-logs` - Get paginated audit logs with filters
+
+### Database Seeding
+- `npm run seed` - Seed with comprehensive real data
 
 ## Database Collections
 
@@ -148,33 +155,10 @@ rentaudit/
 - Minimal re-renders with React.memo
 - Server-side rendering for SEO and performance
 
-## Deployment
-
-### Vercel Deployment
-1. Connect your GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
-
-### Environment Variables for Production
-```env
-MONGODB_URI=your-production-mongodb-uri
-JWT_SECRET=your-secure-jwt-secret
-NEXTAUTH_SECRET=your-secure-nextauth-secret
-NEXTAUTH_URL=https://your-domain.vercel.app
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
 ## License
 
 MIT License - see LICENSE file for details
 
 ## Support
 
-For support, email support@rentaudit.com or create an issue in the repository. 
+For support, email mayankkamriya305@gmail.com or create an issue in the repository. 
