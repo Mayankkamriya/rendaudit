@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
+dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_here';
 
 export interface User {

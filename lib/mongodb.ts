@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const defaultUri = 'mongodb://localhost:27017/rentaudit';
 const uri = process.env.MONGODB_URI || defaultUri;
 
