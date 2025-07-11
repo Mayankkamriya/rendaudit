@@ -199,7 +199,11 @@ export default function Listings() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {listings.map((listing) => (
-                    <tr key={listing._id} className="hover:bg-gray-50">
+                    <tr key={listing._id} className={`hover:bg-gray-50 ${
+                      listing.status === 'approved' ? 'bg-green-50' :
+                      listing.status === 'rejected' ? 'bg-red-50' :
+                      listing.status === 'pending' ? 'bg-yellow-50' : ''
+                    }`}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
                           <div className="text-sm font-medium text-gray-900">
@@ -228,31 +232,31 @@ export default function Listings() {
                         {new Date(listing.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end space-x-2">
+                        <div className="flex items-center justify-end space-x-4">
                           {listing.status === 'pending' && (
                             <>
                               <button
                                 onClick={() => handleStatusChange(listing._id, 'approve')}
-                                className="text-green-600 hover:text-green-900"
+                                className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-100 transition-colors"
                                 title="Approve"
                               >
-                                <CheckCircle className="h-4 w-4" />
+                                <CheckCircle className="h-5 w-5" />
                               </button>
                               <button
                                 onClick={() => handleStatusChange(listing._id, 'reject')}
-                                className="text-red-600 hover:text-red-900"
+                                className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-100 transition-colors"
                                 title="Reject"
                               >
-                                <XCircle className="h-4 w-4" />
+                                <XCircle className="h-5 w-5" />
                               </button>
                             </>
                           )}
                           <button
                             onClick={() => handleEdit(listing)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-100 transition-colors"
                             title="Edit"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-5 w-5" />
                           </button>
                         </div>
                       </td>

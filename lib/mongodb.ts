@@ -1,10 +1,12 @@
 import { MongoClient } from 'mongodb';
 
+const defaultUri = 'mongodb://localhost:27017/rentaudit';
+const uri = process.env.MONGODB_URI || defaultUri;
+
 if (!process.env.MONGODB_URI) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
+  console.warn(`⚠️ No environment variable for MONGODB_URI found. Using default: ${defaultUri}`);
 }
 
-const uri = process.env.MONGODB_URI;
 const options = {};
 
 let client;

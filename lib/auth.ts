@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'rentaudit-super-secret-jwt-key-2024';
+const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_here';
 
 export interface User {
   id: string;
