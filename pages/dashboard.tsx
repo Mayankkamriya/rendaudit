@@ -38,6 +38,7 @@ export default function Dashboard({ stats, recentListings, recentAuditLogs }: Da
   const [auditLogsTotal, setAuditLogsTotal] = useState(0);
   const itemsPerPage = 5;
 
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   // Fetch real-time dashboard data
   const fetchDashboardData = async () => {
     if (!token) return;
@@ -358,7 +359,7 @@ export default function Dashboard({ stats, recentListings, recentAuditLogs }: Da
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // Fetch dashboard data with proper authentication
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     
     // Get all listings to calculate accurate stats
     const allListingsRes = await fetch(`${baseUrl}/api/listings?limit=1000&status=all`);

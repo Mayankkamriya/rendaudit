@@ -50,7 +50,7 @@ A comprehensive admin dashboard for managing car rental listings built with Next
    MONGODB_URI=your mongo uri
    JWT_SECRET=jwt secret
    NEXTAUTH_SECRET=jwt secret
-   NEXTAUTH_URL=http://localhost:3000
+   NEXT_PUBLIC_BASE_URL=http://localhost:3000
    ```
 
 4. **Seed with real data**
