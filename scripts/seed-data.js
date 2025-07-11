@@ -1,8 +1,9 @@
+require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/rentaudit';
-
+console.log(`Using MongoDB URI: ${MONGODB_URI}`);
 async function seedDatabase() {
   const client = new MongoClient(MONGODB_URI);
   try {

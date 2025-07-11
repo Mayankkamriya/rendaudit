@@ -2,17 +2,18 @@
   "name": "rentaudit-admin",
   "version": "0.1.0",
   "private": true,
-      "scripts": {
-      "dev": "next dev",
-      "setup-db": "node scripts/setup-db.js",
-      "seed": "node scripts/seed-data.js",
-      "build": "next build",
-      "start": "next start",
-      "lint": "next lint"
-    },
+  "scripts": {
+    "dev": "next dev",
+    "setup-db": "node scripts/setup-db.js",
+    "seed": "node scripts/seed-data.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "date-fns": "^2.30.0",
+    "dotenv": "^17.2.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.294.0",
     "mongodb": "^6.3.0",
